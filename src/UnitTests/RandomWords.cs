@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace UnitTests
 {
@@ -18,6 +19,9 @@ namespace UnitTests
         // No of words in my list.
         static readonly int WordCount = ThreeLetterWords.Length / 3;
 
+        // For title-casing random words...
+        static readonly TextInfo ENUS = new CultureInfo("en-US", false).TextInfo;
+
         /// <summary>
         /// Generates a sequence of random three letter words, capped to 'maxWords'
         /// </summary>
@@ -25,8 +29,11 @@ namespace UnitTests
         {
             for (int i = 0; i < maxWords; i++)
             {
+                var titleCase = Rnd.NextDouble() > 0.5;
                 var index = Rnd.Next(0, WordCount) * 3;
-                yield return ThreeLetterWords.Substring(index, 3);
+                var nextWord = ThreeLetterWords.Substring(index, 3);
+                
+                yield return titleCase ? ENUS.ToTitleCase(nextWord) : nextWord;
             }
         }
     }

@@ -1,11 +1,10 @@
+
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Utils.FileSort;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTests
 {
@@ -26,10 +25,10 @@ namespace UnitTests
         public void GenerateJunk()
         {
             const int LineSize = 64;
-            const int FileSize = OneMB * 10;
+            const int FileSize = OneMB;
             const int WordsPerLine = LineSize / 4;
 
-            var sampleDataFileName = Path.Combine(TestDataBaseFolder, "SampleFile.txt");
+            var sampleDataFileName = Path.Combine(TestDataBaseFolder, $"SampleFile-{SizeToString(FileSize)}.txt");
 
             using (var writer = File.CreateText(sampleDataFileName))
             {
@@ -46,7 +45,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void SplitSortMergeTest()
+        public void SplitSortMerge()
         {
             var inputFileName = Path.Combine(TestDataBaseFolder, "Input-1GB.txt");
             var outputFileName = Path.Combine(TestDataBaseFolder, "Output-1GB.txt");
