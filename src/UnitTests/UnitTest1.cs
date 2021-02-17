@@ -9,6 +9,10 @@ using Utils.FileSort;
 
 namespace UnitTests
 {
+    // Sorry... 
+    // These are not 'real' tests, rather just a tool to trigger some use-cases.
+    // Running the tests doesn't guarentee the code is defect free.
+
     [TestClass]
     public class UnitTest1
     {
@@ -16,28 +20,27 @@ namespace UnitTests
         const int OneMB = OneKB * 1024;
         const int OneGB = OneMB * 1024;
 
-        const string InputFileName_TenMB = "D:/Junk/FILESORT/Input-10MB.txt";
-        const string InputFileName_OneGB = "D:/Junk/FILESORT/Input-1GB.txt";
-        const string OutputFileName = "D:/Junk/FILESORT/Output.txt";
+        const string TestDataBaseFolder = "D:/Junk/FILESORT";
 
         [TestMethod]
-        public void CreateLargeFile()
+        public void GenerateJunk()
         {
-            const string TestFileName = "D:/Junk/FILESORT/Input.txt";
             const int LineSize = 64;
             const int FileSize = OneMB * 10;
+
+            var sampleDataFileName = Path.Combine(TestDataBaseFolder, "SampleFile.txt");
 
             // Since we write three-letter-plus-space.
             const int WordsPerLine = LineSize / 4;
 
-            using (var writer = File.CreateText(TestFileName))
+            using (var writer = File.CreateText(sampleDataFileName))
             {
-                var randomWords = new RandomWords();
                 var bytesWritten = 0;
 
+                // Append random text till we reach suggeted file size...
                 while(bytesWritten < FileSize)
                 {
-                    var nextLine = string.Join(" ", randomWords.Next().Take(WordsPerLine));
+                    var nextLine = string.Join(" ", RandomWords.Next().Take(WordsPerLine));
                     writer.WriteLine(nextLine);
                     bytesWritten += nextLine.Length;
                 }
@@ -47,51 +50,32 @@ namespace UnitTests
         [TestMethod]
         public void SplitSortMergeTest()
         {
-            var inputFileName = InputFileName_OneGB;
-            var bufferSize = OneMB * 100;
+            var inputFileName = Path.Combine(TestDataBaseFolder, "Input-1GB.txt");
+            var outputFileName = Path.Combine(TestDataBaseFolder, "Output-1GB.txt");
             var inputFileSize = new FileInfo(inputFileName).Length;
-
-            Console.WriteLine($"FileSize   : {SizeToString(inputFileSize)}");
-            Console.WriteLine($"BufferSize : {SizeToString(bufferSize)}");
+            var bufferSize = OneMB * 100;
 
             var timer = Stopwatch.StartNew();
-            FileSorter.SortFile(inputFileName, OutputFileName, bufferSize);
+            FileSorter.SortFile(inputFileName, outputFileName, bufferSize);
             timer.Stop();
 
-            Console.WriteLine($"Total      : {timer.Elapsed}");
-
+            Console.WriteLine($"FileSize  : {SizeToString(inputFileSize)}");
+            Console.WriteLine($"BufferSize: {SizeToString(bufferSize)}");
+            Console.WriteLine($"Elapsed   : {timer.Elapsed}");
         }
 
         static string SizeToString(long bytes)
         {
-            if (bytes < 1024) return $"{bytes:#,0} bytes.";
+            if (bytes < 1024) return $"{bytes:#,0} bytes";
 
             var kb = bytes / 1024;
-            if (kb < 1024) return $"{kb:#,0} KB";
+            if (kb < 1024) return $"{kb:#,0.0} KB";
 
             var mb = kb / 1024;
-            if (mb < 1024) return $"{mb:#,0} MB";
+            if (mb < 1024) return $"{mb:#,0.0} MB";
 
             var gb = mb / 1024.0;
             return $"{gb:#,0.0} GB";
         }
-
-        class RandomWords
-        {
-            const string ThreeLetterWords = @"aahaalaasabaabsabyaceactaddadoadsadzaffaftagaageagoagsahaahiahsaidailaimainairaisaitajialaalbaleallalpalsaltamaamiampamuanaandaneaniantanyapeapoappaptarbarcarearfarkarmarsartashaskaspassateattaukavaaveavoawaaweawlawnaxeayeaysazobaabadbagbahbalbambanbapbarbasbatbaybedbeebegbelbenbesbetbeybibbidbigbinbiobisbitbizboabobbodbogboobopbosbotbowboxboybrabrobrrbubbudbugbumbunburbusbutbuybyebyscabcadcafcamcancapcarcatcawcayceecelcepchicigciscobcodcogcolconcoocopcorcoscotcowcoxcoycozcrucrycubcudcuecumcupcurcutcuzcwmdabdaddagdahdakdaldamdandapdasdawdaydebdeedefdeldendepdevdewdexdeydibdiddiedifdigdimdindipdisditdocdoedogdohdoldomdondordosdotdowdrydubdudduedugduhduidumdunduodupdyeeareateauebbecoecuedhedseekeeleeweffefsefteggegoekeeldelfelkellelmelsemeemoemsemuendengenseoneraereergernerrersessestetaetheveeweeyefabfadfagfahfanfarfasfatfaxfayfedfeefehfemfenferfesfetfeufewfeyfezfibfidfiefigfilfinfirfitfixfizfluflyfobfoefogfohfonfoofopforfoufoxfoyfrofryfubfudfugfunfurgabgadgaegaggalgamgangapgargasgatgaygedgeegelgemgengetgeyghigibgidgiegifgiggingipgisgitgnugoagobgodgoogorgosgotgoxgrrgulgumgungutguvguygymgyphadhaehaghahhajhamhaohaphashathawhayhehhemhenhepherheshethewhexheyhichidhiehimhinhiphishithmmhobhodhoehoghomhonhoohophothowhoyhubhuehughuhhumhunhuphuthypiceichickicyidsiffifsiggilkillimpinkinninsionireirkismitsivyjabjagjamjarjawjayjeejetjeujibjigjinjobjoejogjotjowjoyjugjunjusjutkabkaekafkaskatkaykeakefkegkenkepkexkeykhikidkifkinkipkirkiskitkoakobkoikopkorkoskuekyelablacladlaglahlamlaplarlaslatlavlawlaxlaylealedleelegleilekletleulevlexleyliblidlielinliplislitlobloglooloplotlowloxludluglumlunluvluxlyemacmadmaemagmammanmapmarmasmatmawmaxmaymedmegmehmelmemmenmetmewmhomibmicmidmigmilmimmirmismixmmmmoamobmocmodmogmoimolmommonmoomopmormosmotmowmudmugmummunmusmutmuxmycnabnaenagnahnamnannapnavnawnaynebneenegnetnewnibnilnimnipnitnixnobnodnognohnomnoonornosnotnownthnubnugnunnusnutoafoakoaroatobaobeobiocaochodaoddodeodsoesoffoftohmohoohsoikoilokaokeoldoleomaomsoneonoonsoofoohootopaopeopsoptoraorborcoreorgorsortoseoudouroutovaoweowlownowtoxooxypacpadpahpakpalpampanpapparpaspatpawpaxpaypeapecpedpeepegpehpenpepperpespetpewphiphophtpiapicpiepigpinpippispitpiupixplypodpohpoipolpompoopoppospotpowpoxproprypsipstpubpudpugpulpunpuppurpusputpyapyepyxqatqisquaradragrahrairajramranraprasratrawraxrayrebrecredreerefregreiremrepresretrevrexrezrhoriaribridrifrigrimrinriprobrocrodroeromroorotrowrubruerugrumrunrutryaryeryusabsacsadsaesagsalsansapsatsausawsaxsayseasecseesegseiselsensersetsevsewsexshasheshhshoshysibsicsigsimsinsipsirsissitsixskaskiskyslysobsocsodsohsolsomsonsopsossotsousowsoxsoyspaspysristysubsuesuksumsunsupsuqsussyntabtadtaetagtajtamtantaotaptartastattautavtawtaxteatectedteetegteltentestettewthethothytictietiltintiptistittixtiztodtoetogtomtontootoptortottowtoytrytsktubtugtuitumtuntuptuttuxtwatwotyeudoughukeuluummumpumsuniunsupoupsurburdurnurpuseutauteutsvacvanvarvasvatvauvavvawveevegvetvexviavidvievigvimvinvisvoevogvowvoxvugvumwabwadwaewagwanwapwarwaswatwawwaxwaywebwedweewenwetwhawhowhywigwinwiswitwizwoewokwonwoowoswotwowwrywudwyewynxisyagyahyakyamyapyaryasyawyayyeayehyenyepyesyetyewyinyipyobyodyokyomyonyouyowyukyumyupzagzapzaszaxzedzeezekzenzepzigzinzipzitzoazoozuzzzz";
-            readonly int WordCount = ThreeLetterWords.Length / 3;
-
-            readonly Random Rnd = new Random(Guid.NewGuid().GetHashCode());
-
-            public IEnumerable<string> Next(int maxWords = 1024)
-            {
-                for(int i=0; i<maxWords; i++)
-                {
-                    var index = Rnd.Next(0, WordCount) * 3;
-                    yield return ThreeLetterWords.Substring(index, 3);
-                }
-            }
-        }
-
     }
 }
