@@ -202,6 +202,9 @@ namespace Utils.FileSort
             }
         }
 
+        /// <summary>
+        /// Peek() and Consume() lines from a text file.
+        /// </summary>
         sealed class LineReader : IDisposable
         {
             StreamReader Reader = null;
@@ -209,14 +212,15 @@ namespace Utils.FileSort
 
             internal LineReader(string fileName)
             {
-                Reader = File.OpenText(fileName);
+                // Open the file. Read-ahead one line.
+                Reader = null != fileName ? File.OpenText(fileName) : throw new ArgumentNullException(nameof(fileName));
                 CurrentLine = Reader.ReadLine();
             }
 
-            // Returns current line, or NULL if reached EOF.
+            // A peek at current line. Returns NULL if reached EOF.
             internal string Peek() => CurrentLine;
 
-            // Returns current line. Advances the reader to next line.
+            // Consumes and returns current line. Also, advances the reader to next line.
             internal string Consume()
             {
                 if (null == CurrentLine) throw new Exception("Reached end of file. Please Peek() before you Consume()");
