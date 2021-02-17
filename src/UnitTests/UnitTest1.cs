@@ -54,7 +54,7 @@ namespace UnitTests
             var bufferSize = OneMB * 100;
 
             var timer = Stopwatch.StartNew();
-            FileSorter.SortFile(inputFileName, outputFileName, bufferSize);
+            FileSorter.SortFile(inputFileName, outputFileName, bufferSize, StringComparison.Ordinal, descending: false);
             timer.Stop();
 
             Console.WriteLine($"FileSize  : {SizeToString(inputFileSize)}");
