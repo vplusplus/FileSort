@@ -235,7 +235,7 @@ namespace Utils.FileSort
                 try {
                     Interlocked.Exchange(ref Reader, null)?.Dispose();
                 }
-                catch { }
+                catch { /* Disposing. Exception ignored by design. */ }
             }
         }
     }
