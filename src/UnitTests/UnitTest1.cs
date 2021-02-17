@@ -64,16 +64,17 @@ namespace UnitTests
 
         static string SizeToString(long bytes)
         {
-            if (bytes < 1024) return $"{bytes:#,0} bytes";
+            const float K = 1024.0f;
+            const float T = 1023.0f;
 
-            var kb = bytes / 1024;
-            if (kb < 1024) return $"{kb:#,0.0} KB";
+            float size = bytes;
 
-            var mb = kb / 1024;
-            if (mb < 1024) return $"{mb:#,0.0} MB";
-
-            var gb = mb / 1024.0;
-            return $"{gb:#,0.0} GB";
+            return size < T ? $"{size:#,0} bytes"
+                : (size /= K) < T ? $"{size:#,0.0} KB"  
+                : (size /= K) < T ? $"{size:#,0.0} MB"
+                : (size /= K) < T ? $"{size:#,0.0} GB"
+                : (size /= K) < T ? $"{size:#,0.0} TB"
+                : $"~{size/K:#,0.0} PB";
         }
     }
 }
