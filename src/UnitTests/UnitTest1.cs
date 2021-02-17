@@ -27,11 +27,9 @@ namespace UnitTests
         {
             const int LineSize = 64;
             const int FileSize = OneMB * 10;
+            const int WordsPerLine = LineSize / 4;
 
             var sampleDataFileName = Path.Combine(TestDataBaseFolder, "SampleFile.txt");
-
-            // Since we write three-letter-plus-space.
-            const int WordsPerLine = LineSize / 4;
 
             using (var writer = File.CreateText(sampleDataFileName))
             {
@@ -42,7 +40,7 @@ namespace UnitTests
                 {
                     var nextLine = string.Join(" ", RandomWords.Next().Take(WordsPerLine));
                     writer.WriteLine(nextLine);
-                    bytesWritten += nextLine.Length;
+                    bytesWritten += nextLine.Length + Environment.NewLine.Length;
                 }
             }
         }
