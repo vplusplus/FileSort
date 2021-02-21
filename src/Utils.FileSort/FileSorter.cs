@@ -167,22 +167,23 @@ namespace Utils.FileSort
    
         static IComparer<string> CreateComparer(StringComparison sortOrder, bool descending)
         {
-            int OrdernalDesc(string lhs, string rhs) => StringComparer.Ordinal.Compare(rhs, lhs);
-            int OrdinalIgnoreCaseDesc(string lhs, string rhs) => StringComparer.OrdinalIgnoreCase.Compare(rhs, lhs);
+            int OrdinalDesc(string lhs, string rhs) => StringComparer.Ordinal.Compare(rhs, lhs);
             int CurrentCultureDesc(string lhs, string rhs) => StringComparer.CurrentCulture.Compare(rhs, lhs);
-            int CurrentCultureIgnoreCaseDesc(string lhs, string rhs) => StringComparer.CurrentCultureIgnoreCase.Compare(rhs, lhs);
             int InvariantCultureDesc(string lhs, string rhs) => StringComparer.InvariantCulture.Compare(rhs, lhs);
+
+            int OrdinalIgnoreCaseDesc(string lhs, string rhs) => StringComparer.OrdinalIgnoreCase.Compare(rhs, lhs);
+            int CurrentCultureIgnoreCaseDesc(string lhs, string rhs) => StringComparer.CurrentCultureIgnoreCase.Compare(rhs, lhs);
             int InvariantCultureIgnoreCaseDesc(string lhs, string rhs) => StringComparer.InvariantCultureIgnoreCase.Compare(rhs, lhs);
 
             if (descending)
             {
                 switch (sortOrder)
                 {
-                    case StringComparison.Ordinal: return Comparer<string>.Create(OrdernalDesc);
-                    case StringComparison.OrdinalIgnoreCase: return Comparer<string>.Create(OrdinalIgnoreCaseDesc);
+                    case StringComparison.Ordinal: return Comparer<string>.Create(OrdinalDesc);
                     case StringComparison.CurrentCulture: return Comparer<string>.Create(CurrentCultureDesc);
-                    case StringComparison.CurrentCultureIgnoreCase: return Comparer<string>.Create(CurrentCultureIgnoreCaseDesc);
                     case StringComparison.InvariantCulture: return Comparer<string>.Create(InvariantCultureDesc);
+                    case StringComparison.OrdinalIgnoreCase: return Comparer<string>.Create(OrdinalIgnoreCaseDesc);
+                    case StringComparison.CurrentCultureIgnoreCase: return Comparer<string>.Create(CurrentCultureIgnoreCaseDesc);
                     case StringComparison.InvariantCultureIgnoreCase: return Comparer<string>.Create(InvariantCultureIgnoreCaseDesc);
                     default: throw new Exception($"Invalid sort order (StringComparison): {sortOrder}");
                 }
@@ -192,10 +193,10 @@ namespace Utils.FileSort
                 switch(sortOrder)
                 {
                     case StringComparison.Ordinal: return StringComparer.Ordinal;
-                    case StringComparison.OrdinalIgnoreCase: return StringComparer.OrdinalIgnoreCase;
                     case StringComparison.CurrentCulture: return StringComparer.CurrentCulture;
-                    case StringComparison.CurrentCultureIgnoreCase: return StringComparer.CurrentCultureIgnoreCase;
                     case StringComparison.InvariantCulture: return StringComparer.InvariantCulture;
+                    case StringComparison.OrdinalIgnoreCase: return StringComparer.OrdinalIgnoreCase;
+                    case StringComparison.CurrentCultureIgnoreCase: return StringComparer.CurrentCultureIgnoreCase;
                     case StringComparison.InvariantCultureIgnoreCase: return StringComparer.InvariantCultureIgnoreCase;
                     default: throw new Exception($"Invalid sort order (StringComparison): {sortOrder}");
                 }
